@@ -11,26 +11,34 @@ CONFIG_DIR=`realpath $SCRIPTS/../config`
 SQL_DIR=`realpath $SCRIPTS/../sql`
 TMP_DIR=/tmp
 
-echo $SQL_DIR
+echo
+echo "Template substitutions:"
+echo
+echo "  \$OUTPUT_DB -> $OUTPUT_DB"
+echo "  \$SQL_DIR   -> $SQL_DIR"
+echo
 
-echo "$CONFIG_DIR/common.cfg.tmpl -> $TMP_DIR/common.cfg"
-cat $CONFIG_DIR/common.cfg.tmpl \
-  | sed 's/\$OUTPUT_DB/'${OUTPUT_DB}'/' \
-  > $TMP_DIR/common.cfg
+files=$(cat <<EOT
+common.cfg
+common-non-part.cfg
+css_RunDeepSource.params
+css_RunDeepForcedSource.params
+EOT
+)
 
-echo "$CONFIG_DIR/common-non-part.cfg.tmpl -> $TMP_DIR/common-non-part.cfg"
-cat $CONFIG_DIR/common-non-part.cfg.tmpl \
-  | sed 's/\$OUTPUT_DB/'${OUTPUT_DB}'/' \
-  > $TMP_DIR/common-non-part.cfg
+echo "Translating templates:"
+echo
+for f in $files; do
+    f_tmpl=${CONFIG_DIR}/${f}.tmpl
+    echo "  $f_tmpl"
+    translate_template $f_tmpl $TMP_DIR/$f
+done
 
-echo "$CONFIG_DIR/css_RunDeepSource.params.tmpl -> $TMP_DIR/css_RunDeepSource.params"
-cat $CONFIG_DIR/css_RunDeepSource.params.tmpl \
-  | sed 's/\$OUTPUT_DB/'${OUTPUT_DB}'/' \
-  | sed 's/\$SQL_DIR/'$(echo $SQL_DIR | sed 's/\//\\\//g')'/' \
-  > $TMP_DIR/css_RunDeepSource.params
-
-echo "$CONFIG_DIR/css_RunDeepForcedSource.params.tmpl -> $TMP_DIR/css_RunDeepForcedSource.params"
-cat $CONFIG_DIR/css_RunDeepForcedSource.params.tmpl \
-  |  sed 's/\$OUTPUT_DB/'${OUTPUT_DB}'/' \
-  |  sed 's/\$SQL_DIR/'$(echo $SQL_DIR | sed 's/\//\\\//g')'/' \
-  > $TMP_DIR/css_RunDeepForcedSource.params
+echo
+echo "Output:"
+echo
+for f in $files; do
+    f_out=$TMP_DIR/$f
+    echo "  $f_out"
+done
+echo
