@@ -1,0 +1,7 @@
+CREATE TABLE `Filter` (
+  `filterId` tinyint(4) NOT NULL,
+  `filterName` char(3) NOT NULL,
+  `photClam` float NOT NULL,
+  `photBW` float NOT NULL,
+  PRIMARY KEY (`filterId`)
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;

@@ -1,0 +1,9 @@
+CREATE TABLE `LeapSeconds` (
+  `whenJd` float NOT NULL,
+  `offset` float NOT NULL,
+  `mjdRef` float NOT NULL,
+  `drift` float NOT NULL,
+  `whenMjdUtc` float DEFAULT NULL,
+  `whenUtc` bigint(20) DEFAULT NULL,
+  `whenTai` bigint(20) DEFAULT NULL
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
