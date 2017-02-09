@@ -2,7 +2,8 @@ Processing templates
 ====================
 
   The template files need do be preprocessed to replace placeholders
-  for database names (etc.) as per the current configuration:
+  for database names (etc.) as per the current configuration before using
+  them by the corresponding tools. Here follow examples:
 
     OUTPUT_DB='sdss_stripe82_00'
     SQL_DIR='some/dir'
