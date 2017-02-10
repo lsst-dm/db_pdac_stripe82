@@ -24,6 +24,14 @@ QSERV_DUMPS_DIR='/qserv/data/dumps'
 
 OUTPUT_DB='sdss_stripe82_01'
 
+# The default location for the log files created on Qserv node
+
+MASTER_TMP_DIR=/tmp/$OUTPUT_DB
+WORKER_TMP_DIR=/tmp/$OUTPUT_DB
+
+MASTER_LOG_DIR=$MASTER_TMP_DIR/log
+WORKER_LOG_DIR=$WORKER_TMP_DIR/log
+
 # Shortcuts
 
 mysql_cmd="mysql -B -N -A -S ${QSERV_MYSQL_DIR}/mysql.sock -h localhost -P13306 -uroot -p${MYSQL_PASSWORD}"
