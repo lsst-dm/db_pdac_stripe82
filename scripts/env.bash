@@ -3,34 +3,32 @@
 # Custom versions of the LSST Stack and the latest version of the Qserv
 # management scripts.
 
-BASE_STACK='/datasets/gapon/stack/'
-QSERV_PKG='/datasets/gapon/development/qserv'
+BASE_STACK="/datasets/gapon/stack"
+QSERV_PKG="/datasets/gapon/development/qserv"
 
 # Qserv deployment parameters (adjust accordingly)
 
-MYSQL_PASSWORD='CHANGEME'
+MYSQL_PASSWORD="CHANGEME"
 
-MASTER='lsst-qserv-master01'
-SSH_MASTER='qserv-master01'
+MASTER="lsst-qserv-master01"
+SSH_MASTER="qserv-master01"
 
-WORKERS=`seq --format 'lsst-qserv-db%2.0f' 1 30`
-SSH_WORKERS=`seq --format 'qserv-db%2.0f' 1 30`
-
-QSERV_DATA_DIR='/datasets/gapon/production/stripe82_catalog_load/production_load'
-QSERV_MYSQL_DIR='/qserv/data/mysql'
-QSERV_DUMPS_DIR='/qserv/data/dumps'
+WORKERS=`seq --format 'lsst-qserv-db%02.0f' 1 30`
+SSH_WORKERS=`seq --format 'qserv-db%02.0f' 1 30`
 
 # Source and destination databases
 
-OUTPUT_DB='sdss_stripe82_01'
+INPUT_DB="sdss_stripe82_00"
+OUTPUT_DB="sdss_stripe82_01"
+
+QSERV_DATA_DIR="/datasets/gapon/production/stripe82_catalog_load/production_load"
+QSERV_MYSQL_DIR="/qserv/data/mysql"
+QSERV_DUMPS_DIR="/qserv/data/dumps/$OUTPUT_DB"
 
 # The default location for the log files created on Qserv node
 
-MASTER_TMP_DIR=/tmp/$OUTPUT_DB
-WORKER_TMP_DIR=/tmp/$OUTPUT_DB
-
-MASTER_LOG_DIR=$MASTER_TMP_DIR/log
-WORKER_LOG_DIR=$WORKER_TMP_DIR/log
+TMP_DIR="/tmp/$OUTPUT_DB"
+LOG_DIR="$TMP_DIR/log"
 
 # Shortcuts
 
@@ -80,3 +78,60 @@ function translate_template {
             > $file_out
     fi
 }
+
+# Verify if all folders exists for the current node on which
+# the script is being run. Try creating the missing folders.
+
+if [[ "$MASTER $WORKERS" == *"$(hostname)"* ]]; then
+
+    # Read-only access to these folders should be good enough
+
+    for folder in "$QSERV_DATA_DIR" "$QSERV_MYSQL_DIR"; do
+
+        if [ ! -d "$folder" ]; then
+            echo "env.bash: directory '${folder}' doesn't exist or is not accessible to user '"`whoami`"'"
+            exit 1
+        fi
+        if [ ! -r "$folder" ]; then
+            echo "env.bash: directory '${folder}' is not readable by user '"`whoami`"'"
+            exit 1
+        fi
+        echo "Access verified: '${folder}' for user '"`whoami`"'"
+    done
+
+    # Check if a folder where MySQL file dumps and load would go
+    # exists, and if it's not then create the one with wide open
+    # permissions.
+
+    if [ ! -d "$QSERV_DUMPS_DIR" ]; then
+        sudo_prefix=''
+        if [ "$(whoami)" != "qserv" ]; then
+            $sudo_prefix="/bin/sudo -u qserv "
+        fi
+        ${sudo_prefix}mkdir -p      ${QSERV_DUMPS_DIR}
+        ${sudo_prefix}chmod -R 0777 ${QSERV_DUMPS_DIR}
+        echo "Created: ${QSERV_DUMPS_DIR}"
+    fi
+    if [ ! -w "$QSERV_DUMPS_DIR" ]; then
+        echo "env.bash: directory '${QSERV_DUMPS_DIR}' is not writeable to user '"`whoami`"'"
+        exit 1
+    fi
+    echo "Access verified: '${QSERV_DUMPS_DIR}'"
+
+    # Verify and create (if needed) if the temporary and log folders
+    # exists and can be accessed for writing purposes by the current user.
+
+    for folder in "$TMP_DIR" "$LOG_DIR"; do
+        if [ ! -d "$folder" ]; then
+            mkdir -p      "$folder"
+            chmod -R 0777 "$folder"
+            echo "Created: ${folder}"
+        fi
+        if [ ! -w "$folder" ]; then
+            echo "env.bash: directory '${folder}' is not writeable to user '"`whoami`"'"
+            exit 1
+        fi
+        echo "Access verified: '${folder}' for user '"`whoami`"'"
+    done
+fi
+
