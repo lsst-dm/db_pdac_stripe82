@@ -5,11 +5,15 @@ set -e
 SCRIPT=`realpath $0`
 SCRIPTS=`dirname $SCRIPT`
 
+# Uncomment this to enable debug printout from the environment
+# setting seqeunce.
+#
+#VERBOSE=1
+
 source $SCRIPTS/env.bash
 
 CONFIG_DIR=`realpath $SCRIPTS/../config`
 SQL_DIR=`realpath $SCRIPTS/../sql`
-TMP_DIR=/tmp
 
 echo
 echo "Template substitutions:"

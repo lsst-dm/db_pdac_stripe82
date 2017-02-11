@@ -79,6 +79,16 @@ function translate_template {
     fi
 }
 
+# This function is similar to 'echo' except it will print
+# an input message (all parameters) if the environment variable VERBOSE
+# is present.
+
+function debug {
+    if [ ! -z ${VERBOSE} ]; then
+        echo "$@"
+    fi
+}
+
 # Verify if all folders exists for the current node on which
 # the script is being run. Try creating the missing folders.
 
@@ -89,14 +99,14 @@ if [[ "$MASTER $WORKERS" == *"$(hostname)"* ]]; then
     for folder in "$QSERV_DATA_DIR" "$QSERV_MYSQL_DIR"; do
 
         if [ ! -d "$folder" ]; then
-            echo "env.bash: directory '${folder}' doesn't exist or is not accessible to user '"`whoami`"'"
+            echo "env.bash: directory '${folder}' doesn't exist or is not accessible by user '"`whoami`"'"
             exit 1
         fi
         if [ ! -r "$folder" ]; then
             echo "env.bash: directory '${folder}' is not readable by user '"`whoami`"'"
             exit 1
         fi
-        echo "Access verified: '${folder}' for user '"`whoami`"'"
+        debug "env.bash: access verified to directory '${folder}' by user '"`whoami`"'"
     done
 
     # Check if a folder where MySQL file dumps and load would go
@@ -104,19 +114,21 @@ if [[ "$MASTER $WORKERS" == *"$(hostname)"* ]]; then
     # permissions.
 
     if [ ! -d "$QSERV_DUMPS_DIR" ]; then
+
         sudo_prefix=''
         if [ "$(whoami)" != "qserv" ]; then
             $sudo_prefix="/bin/sudo -u qserv "
         fi
         ${sudo_prefix}mkdir -p      ${QSERV_DUMPS_DIR}
         ${sudo_prefix}chmod -R 0777 ${QSERV_DUMPS_DIR}
-        echo "Created: ${QSERV_DUMPS_DIR}"
+
+        debug "env.sh: created directory '${QSERV_DUMPS_DIR}'"
     fi
     if [ ! -w "$QSERV_DUMPS_DIR" ]; then
-        echo "env.bash: directory '${QSERV_DUMPS_DIR}' is not writeable to user '"`whoami`"'"
+        echo "env.bash: directory '${QSERV_DUMPS_DIR}' is not writeable by user '"`whoami`"'"
         exit 1
     fi
-    echo "Access verified: '${QSERV_DUMPS_DIR}'"
+    debug "env.bash: access verified to directory '${QSERV_DUMPS_DIR}'"
 
     # Verify and create (if needed) if the temporary and log folders
     # exists and can be accessed for writing purposes by the current user.
@@ -125,13 +137,13 @@ if [[ "$MASTER $WORKERS" == *"$(hostname)"* ]]; then
         if [ ! -d "$folder" ]; then
             mkdir -p      "$folder"
             chmod -R 0777 "$folder"
-            echo "Created: ${folder}"
+            debug "env.sh: created directory '${folder}'"
         fi
         if [ ! -w "$folder" ]; then
-            echo "env.bash: directory '${folder}' is not writeable to user '"`whoami`"'"
+            echo "env.bash: directory '${folder}' is not writeable by user '"`whoami`"'"
             exit 1
         fi
-        echo "Access verified: '${folder}' for user '"`whoami`"'"
+        debug "env.bash: access verified to directory '${folder}' by user '"`whoami`"'"
     done
 fi
 
