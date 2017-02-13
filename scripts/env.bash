@@ -19,7 +19,11 @@ SSH_WORKERS=`seq --format 'qserv-db%02.0f' 1 30`
 # Source and destination databases
 
 INPUT_DB="sdss_stripe82_00"
+INPUT_OBJECT_TABLE="RunDeepSource"
+
 OUTPUT_DB="sdss_stripe82_01"
+OUTPUT_OBJECT_TABLE="$INPUT_OBJECT_TABLE"
+
 
 QSERV_DATA_DIR="/datasets/gapon/production/stripe82_catalog_load/production_load"
 QSERV_MYSQL_DIR="/qserv/data/mysql"
@@ -94,19 +98,27 @@ function debug {
 
 if [[ "$MASTER $WORKERS" == *"$(hostname)"* ]]; then
 
+    # Make sure the script is being run under user 'qserv'
+
+    if [ "$(whoami)" != "qserv" ]; then
+        echo "env.bash: this script must be run by user 'qserv'"
+        exit 1
+    fi
+    debug "env.bash: user 'qserv'"
+
     # Read-only access to these folders should be good enough
 
     for folder in "$QSERV_DATA_DIR" "$QSERV_MYSQL_DIR"; do
 
         if [ ! -d "$folder" ]; then
-            echo "env.bash: directory '${folder}' doesn't exist or is not accessible by user '"`whoami`"'"
+            echo "env.bash: directory '${folder}' doesn't exist or is not accessible"
             exit 1
         fi
         if [ ! -r "$folder" ]; then
-            echo "env.bash: directory '${folder}' is not readable by user '"`whoami`"'"
+            echo "env.bash: directory '${folder}' is not readable"
             exit 1
         fi
-        debug "env.bash: access verified to directory '${folder}' by user '"`whoami`"'"
+        debug "env.bash: access verified for '${folder}'"
     done
 
     # Check if a folder where MySQL file dumps and load would go
@@ -115,20 +127,16 @@ if [[ "$MASTER $WORKERS" == *"$(hostname)"* ]]; then
 
     if [ ! -d "$QSERV_DUMPS_DIR" ]; then
 
-        sudo_prefix=''
-        if [ "$(whoami)" != "qserv" ]; then
-            $sudo_prefix="/bin/sudo -u qserv "
-        fi
-        ${sudo_prefix}mkdir -p      ${QSERV_DUMPS_DIR}
-        ${sudo_prefix}chmod -R 0777 ${QSERV_DUMPS_DIR}
+        mkdir -p      ${QSERV_DUMPS_DIR}
+        chmod -R 0777 ${QSERV_DUMPS_DIR}
 
         debug "env.sh: created directory '${QSERV_DUMPS_DIR}'"
     fi
     if [ ! -w "$QSERV_DUMPS_DIR" ]; then
-        echo "env.bash: directory '${QSERV_DUMPS_DIR}' is not writeable by user '"`whoami`"'"
+        echo "env.bash: directory '${QSERV_DUMPS_DIR}' is not writeable"
         exit 1
     fi
-    debug "env.bash: access verified to directory '${QSERV_DUMPS_DIR}'"
+    debug "env.bash: access verified for '${QSERV_DUMPS_DIR}'"
 
     # Verify and create (if needed) if the temporary and log folders
     # exists and can be accessed for writing purposes by the current user.
@@ -140,10 +148,10 @@ if [[ "$MASTER $WORKERS" == *"$(hostname)"* ]]; then
             debug "env.sh: created directory '${folder}'"
         fi
         if [ ! -w "$folder" ]; then
-            echo "env.bash: directory '${folder}' is not writeable by user '"`whoami`"'"
+            echo "env.bash: directory '${folder}' is not writeable"
             exit 1
         fi
-        debug "env.bash: access verified to directory '${folder}' by user '"`whoami`"'"
+        debug "env.bash: access verified for '${folder}'"
     done
 fi
 

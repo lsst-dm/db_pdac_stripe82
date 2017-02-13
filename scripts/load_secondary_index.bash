@@ -17,7 +17,7 @@ fi
 # Create the secondary index table similarily to the one which should
 # already exist in the cluster.
 
-$mysql_cmd -e "CREATE TABLE qservMeta.${OUTPUT_DB}__Object LIKE qservMeta.${INPUT_DB}__Object"
+$mysql_cmd -e "CREATE TABLE qservMeta.${OUTPUT_DB}__${OUTPUT_OBJECT_TABLE} LIKE qservMeta.${INPUT_DB}__${OUTPUT_OBJECT_TABLE}"
 
 # Load TSV files harvested from the worker nodes into the table
 
@@ -26,5 +26,5 @@ mkdir -p $MASTER_LOG_DIR
 cd $QSERV_DUMPS_DIR
 for f in `ls -1 *.tsv`; do
   echo "Loading: ${f}"
-  $mysql_cmd -e "LOAD DATA INFILE '$QSERV_DUMPS_DIR/$f' INTO TABLE qservMeta.${OUTPUT_DB}__Object" >& $QSERV_DUMPS_DIR/load_${f}.log
+  $mysql_cmd -e "LOAD DATA INFILE '$QSERV_DUMPS_DIR/$f' INTO TABLE qservMeta.${OUTPUT_DB}__${OUTPUT_OBJECT_TABLE}" >& $LOG_DIR/load_${f}.log
 done
