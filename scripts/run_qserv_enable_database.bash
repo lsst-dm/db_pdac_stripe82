@@ -7,9 +7,7 @@ SCRIPTS=`dirname $SCRIPT`
 
 source $SCRIPTS/env.bash
 
-mkdir -p $WORKER_LOG_DIR
-
 for node in $SSH_WORKERS; do
-    echo $node : enabling $OUTPUT_DB
-    ssh -n $node "$SCRIPTS/qserv_enable_database.bash >& $WORKER_LOG_DIR/qserv_enable_database.log" &
+    echo $node : enabling $OUTPUT_DB in Qserv
+    ssh -n $node "$SCRIPTS/qserv_enable_database.bash" >& $LOG_DIR/${node}_qserv_enable_database.log &
 done

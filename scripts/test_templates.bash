@@ -22,13 +22,7 @@ echo "  \$OUTPUT_DB -> $OUTPUT_DB"
 echo "  \$SQL_DIR   -> $SQL_DIR"
 echo
 
-files=$(cat <<EOT
-common.cfg
-common-non-part.cfg
-css_RunDeepSource.params
-css_RunDeepForcedSource.params
-EOT
-)
+files="common.cfg common-non-part.cfg css_${OUTPUT_OBJECT_TABLE}.params css_${OUTPUT_SOURCE_TABLE}.params"
 
 echo "Translating templates:"
 echo

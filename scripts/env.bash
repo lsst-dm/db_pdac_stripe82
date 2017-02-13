@@ -20,10 +20,11 @@ SSH_WORKERS=`seq --format 'qserv-db%02.0f' 1 30`
 
 INPUT_DB="sdss_stripe82_00"
 INPUT_OBJECT_TABLE="RunDeepSource"
+INPUT_SOURCE_TABLE="RunDeepForcedSource"
 
 OUTPUT_DB="sdss_stripe82_01"
-OUTPUT_OBJECT_TABLE="$INPUT_OBJECT_TABLE"
-
+OUTPUT_OBJECT_TABLE="${INPUT_OBJECT_TABLE}"
+OUTPUT_SOURCE_TABLE="${INPUT_SOURCE_TABLE}"
 
 QSERV_DATA_DIR="/datasets/gapon/production/stripe82_catalog_load/production_load"
 QSERV_MYSQL_DIR="/qserv/data/mysql"
