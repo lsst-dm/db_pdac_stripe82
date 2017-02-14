@@ -2,23 +2,23 @@
 
 set -e
 
-script=`realpath $0`
-scripts=`dirname $script`
+SCRIPT=`realpath $0`
+SCRIPTS=`dirname $SCRIPT`
 
 # Uncomment this to enable debug printout from the environment
 # setting seqeunce.
 #
 #VERBOSE=1
 
-source $scripts/env_qserv_stack.bash
+source $SCRIPTS/env_qserv_stack.bash
 
-config_dir=`realpath $scripts/../config`
-sql_dir=`realpath $scripts/../sql`
+config_dir=`realpath $SCRIPTS/../config`
+sql_dir=`realpath $SCRIPTS/../sql`
 
 worker=`/usr/bin/hostname`
 
 if [[ "$WORKERS" != *"$worker"* ]]; then
-    echo `basename $script`": this script must be run on worker nodes: "${SSH_WORKERS}
+    echo `basename $SCRIPT`": this script must be run on worker nodes: "${SSH_WORKERS}
     exit 1
 fi
 
