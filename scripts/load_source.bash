@@ -2,8 +2,7 @@
 
 set -e
 
-
-script=`realpath $0`
+script`realpath $0`
 scripts=`dirname $script`
 
 # Uncomment this to enable debug printout from the environment
@@ -13,8 +12,8 @@ scripts=`dirname $script`
 
 source $scripts/env_qserv_stack.bash
 
-config_dir=`realpath $scripts/../config`
-sql_dir=`realpath $scripts/../sql`
+config_dir=`realpath ${scripts}/../config`
+sql_dir=`realpath ${scripts}/../sql`
 
 worker=`/usr/bin/hostname`
 
@@ -28,26 +27,31 @@ echo "["`date`"] ** Processing configuration templates at worker: ${worker} **"
 echo "------------------------------------------------------------------------------------"
 
 for file in common.cfg; do
-    echo "${config_dir}/${file}.tmpl -> $TMP_DIR/${file}"
-    translate_template ${config_dir}/${file}.tmpl $TMP_DIR/${file}
+    echo "${config_dir}/${file}.tmpl -> ${TMP_DIR}/${file}"
+    translate_template ${config_dir}/${file}.tmpl ${TMP_DIR}/${file}
 done
 
 loader=`which qserv-data-loader.py`
 opt_verbose="--verbose --verbose --verbose --verbose-all"
 opt_conn="--host=${MASTER} --port=5012 --secret=${config_dir}/wmgr.secret --no-css"
-opt_config="--config=${TMP_DIR}/common.cfg --config=${config_dir}/${OUTPUT_OBJECT_TABLE}.cfg"
-opt_db_table_schema="${OUTPUT_DB} ${OUTPUT_OBJECT_TABLE} ${sql_dir}/${OUTPUT_OBJECT_TABLE}.sql"
+opt_config="--config=${TMP_DIR}/common.cfg --config=${config_dir}/${OUTPUT_SOURCE_TABLE}.cfg"
+opt_db_table_schema="${OUTPUT_DB} ${OUTPUT_SOURCE_TABLE} ${sql_dir}/${OUTPUT_SOURCE_TABLE}.sql"
+worker_data_dir="${QSERV_DATA_DIR}/${OUTPUT_SOURCE_TABLE}/${worker}"
 
 echo "------------------------------------------------------------------------------------"
 echo "["`date`"] ** Begin loading at worker: ${worker} **"
 echo "------------------------------------------------------------------------------------"
 
-opt_data="--skip-partition --chunks-dir=${QSERV_DATA_DIR}/${OUTPUT_OBJECT_TABLE}/${worker}/"
-loadercmd="${loader} ${opt_verbose} ${opt_conn} --worker=${worker} ${opt_config} ${opt_data} ${opt_db_table_schema}"
+for folder in `ls ${worker_data_dir}`; do
 
-echo ${loadercmd}
-# ${loadercmd}
+    echo "["`date`"] ** Loading folder: ${folder} **"
+    echo "------------------------------------------------------------------------------------"
 
-echo "------------------------------------------------------------------------------------"
+    opt_data="--skip-partition --chunks-dir=${worker_data_dir}/${folder}/"
+    loadercmd="${loader} ${opt_verbose} ${opt_conn} --worker=${worker} ${opt_config} ${opt_data} ${opt_db_table_schema}"
+
+    echo ${loadercmd}
+    #${loadercmd}
+    echo "------------------------------------------------------------------------------------"
+done
 echo "["`date`"] ** Finished loading **"
-
