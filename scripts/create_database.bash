@@ -10,6 +10,8 @@ SCRIPTS=`dirname $SCRIPT`
 
 source $SCRIPTS/env_base_stack.bash
 
+assert_master_or_worker
+
 $mysql_cmd -e "DROP DATABASE IF EXISTS ${OUTPUT_DB};"
 $mysql_cmd -e "CREATE DATABASE IF NOT EXISTS ${OUTPUT_DB};"
 $mysql_cmd -e "GRANT ALL ON ${OUTPUT_DB}.* TO 'qsmaster'@'localhost';"

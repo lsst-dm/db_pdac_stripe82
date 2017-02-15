@@ -9,6 +9,8 @@ source $SCRIPTS/env.bash
 
 $SCRIPTS/get_chunk_numbers.bash
 
+assert_worker
+
 cd $TMP_DIR/chunks
 for chunks in `ls -1 chunks_*`; do
     echo "Dumping triplets of chunks: ${chunks} (async)"

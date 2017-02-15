@@ -12,14 +12,16 @@ SCRIPTS=`dirname $SCRIPT`
 
 source $SCRIPTS/env.bash
 
-CONFIG_DIR=`realpath $SCRIPTS/../config`
-SQL_DIR=`realpath $SCRIPTS/../sql`
+assert_master_or_worker
+
+config_dir=`realpath $SCRIPTS/../config`
+sql_dir"=`realpath $SCRIPTS/../sql`
 
 echo
 echo "Template substitutions:"
 echo
 echo "  \$OUTPUT_DB -> $OUTPUT_DB"
-echo "  \$SQL_DIR   -> $SQL_DIR"
+echo "  \$SQL_DIR   -> $sql_dir"
 echo
 
 files="common.cfg common-non-part.cfg css_${OUTPUT_OBJECT_TABLE}.params css_${OUTPUT_SOURCE_TABLE}.params"
@@ -27,7 +29,7 @@ files="common.cfg common-non-part.cfg css_${OUTPUT_OBJECT_TABLE}.params css_${OU
 echo "Translating templates:"
 echo
 for f in $files; do
-    f_tmpl=${CONFIG_DIR}/${f}.tmpl
+    f_tmpl=${config_dir}/${f}.tmpl
     echo "  $f_tmpl"
     translate_template $f_tmpl $TMP_DIR/$f
 done

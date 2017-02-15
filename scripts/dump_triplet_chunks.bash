@@ -9,6 +9,8 @@ SCRIPTS=`dirname $SCRIPT`
 
 source $SCRIPTS/env.bash
 
+assert_worker
+
 for chunk in `cat ${TMP_DIR}/chunks/${chunks}`;
 do
     echo "Dumping triplets of chunk: ${chunk}"

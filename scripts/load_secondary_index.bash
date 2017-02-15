@@ -7,12 +7,7 @@ SCRIPTS=`dirname $SCRIPT`
 
 source $SCRIPTS/env_base_stack.bash
 
-# Make sure we're at the right host
-
-if [ $SSH_MASTER != "$(hostname)" ]; then
-    echo `basename $SCRIPT` : this script must be run on node $SSH_MASTER
-    exit 1
-fi
+assert_master
 
 # Create the secondary index table similarily to the one which should
 # already exist in the cluster.

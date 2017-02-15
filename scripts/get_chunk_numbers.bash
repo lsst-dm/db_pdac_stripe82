@@ -13,6 +13,8 @@ SCRIPTS=`dirname $SCRIPT`
 
 source $SCRIPTS/env_base_stack.bash
 
+assert_worker
+
 cd $TMP_DIR
 echo "\
 SELECT SUBSTR(TABLE_NAME,8) \

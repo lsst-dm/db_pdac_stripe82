@@ -13,6 +13,8 @@ SCRIPTS=`dirname $SCRIPT`
 
 source $SCRIPTS/env_base_stack.bash
 
+assert_worker
+
 worker="$(hostname)"
 
 triplet_file="${QSERV_DUMPS_DIR}/idx_object_${chunk}.tsv"

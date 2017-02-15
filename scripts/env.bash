@@ -39,6 +39,27 @@ LOG_DIR="$TMP_DIR/log"
 mysql_cmd="mysql -B -N -A -S ${QSERV_MYSQL_DIR}/mysql.sock -h localhost -P13306 -uroot -p${MYSQL_PASSWORD}"
 mysqldump_cmd="mysqldump  -S ${QSERV_MYSQL_DIR}/mysql.sock -h localhost -P13306 -uroot -p${MYSQL_PASSWORD}"
 
+# Host verification functions
+
+function assert_master {
+    if [ $MASTER != "$(hostname)" ]; then
+        echo `basename $0` : this script must be run on node $MASTER
+        exit 1
+    fi
+}
+function assert_worker {
+    if [[ "$WORKERS" != *"$(hostname)"* ]]; then
+        echo `basename $0` : this script must be run on nodes $WORKERS
+        exit 1
+    fi
+}
+function assert_master_or_worker {
+    if [[ "$MASTER $WORKERS" != *"$(hostname)"* ]]; then
+        echo `basename $0` : this script must be run on nodes $MASTER $WORKERS
+        exit 1
+    fi
+}
+
 # Translate the specified template file and print the result
 # into the specified file.
 #

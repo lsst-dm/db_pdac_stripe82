@@ -12,15 +12,12 @@ SCRIPTS=`dirname $SCRIPT`
 
 source $SCRIPTS/env_qserv_stack.bash
 
+assert_worker
+
 config_dir=`realpath $SCRIPTS/../config`
 sql_dir=`realpath $SCRIPTS/../sql`
 
 worker=`/usr/bin/hostname`
-
-if [[ "$WORKERS" != *"$worker"* ]]; then
-    echo `basename $SCRIPT`": this script must be run on worker nodes: "${SSH_WORKERS}
-    exit 1
-fi
 
 echo "------------------------------------------------------------------------------------"
 echo "["`date`"] ** Processing configuration templates at worker: ${worker} **"
