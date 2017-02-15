@@ -23,7 +23,14 @@ for f in $files; do
     translate_template $f_tmpl $TMP_DIR/$f
 done
 
-# Populate CSS for the new database
+# Populate CSS for the new database if the database
+# is not registered in CSS.
+
+for db in `qserv-admin.py "SHOW DATABASES;"`; do
+    if [ "$db" == "$OUTPUT_DB" ]; then
+        exit 0
+    fi
+done
 
 qserv-admin.py "CREATE DATABASE ${OUTPUT_DB} ${config_dir}/css.params;"
 qserv-admin.py "CREATE TABLE ${OUTPUT_DB}.${OUTPUT_OBJECT_TABLE} ${TMP_DIR}/css_${OUTPUT_OBJECT_TABLE}.params;"
