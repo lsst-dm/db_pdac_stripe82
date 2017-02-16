@@ -160,8 +160,8 @@ function test_flag {
     echo $result
 }
 
-# Extract common command line parameters (if any) and set
-# the corresponding environment variables.
+# Extract common command line parameters (if any) and process
+# them accordingly.
 
 if [ ! -z "$(test_flag '-v|--verbose')" ]; then
     VERBOSE=1
@@ -169,6 +169,25 @@ fi
 if [ ! -z "$(test_flag '-d|--debug')" ]; then
      DEBUG=1
 fi
+if [ ! -z "$(test_flag '-h|--help')" ]; then
+     if [ ! -z "$HELP" ]; then
+         echo "$HELP"
+         echo "
+COMMON OPTIONS:
+
+  -h|--help
+      print this help
+
+  -v|--verbose
+      turn on verbose mode for message logger
+
+  -d|--debug
+      turn on debug mode for message logger
+"
+     fi
+     exit 0
+fi
+
 
 # Verify if all folders exists for the current node on which
 # the script is being run. Try creating the missing folders.

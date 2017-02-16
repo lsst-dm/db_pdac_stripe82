@@ -12,13 +12,13 @@ source $SCRIPTS/env_base_stack.bash
 
 assert_master_or_worker
 
-if [ ! -z "$(test_flag '--force|-f')" ]; then
+if [ ! -z "$(test_flag '-D|--delete')" ]; then
     verbose "deleting database: ${OUTPUT_DB}"
     $mysql_cmd -e "DROP DATABASE IF EXISTS ${OUTPUT_DB};"
 fi
 verbose "creating database: ${OUTPUT_DB}"
 $mysql_cmd -e "CREATE DATABASE IF NOT EXISTS ${OUTPUT_DB};"
 
-verbose "granting access orivileges for database: ${OUTPUT_DB}"
+verbose "configuring access privileges for database: ${OUTPUT_DB}"
 $mysql_cmd -e "GRANT ALL ON ${OUTPUT_DB}.* TO 'qsmaster'@'localhost';"
 $mysql_cmd -e "FLUSH PRIVILEGES;"
