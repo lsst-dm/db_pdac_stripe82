@@ -8,13 +8,14 @@ SCRIPTS=`dirname $SCRIPT`
 HELP="
 DESCRIPTION:
 
-  Create (or re-create) the database configured in the environment
-  configuration file:
+  This is the top-level driver script meant to create (or re-create) a new
+  database configured in the environment configuration file:
 
     `realpath $SCRIPTS/../config/env.bash`
 
-  This operation will be performed simuyltaneously on all
-  nodes (including MASTER) of the Qserv cluster.
+  The database will be created on all nodes (including MASTER and WORKERS)
+  of a Qserv cluster. The script must be run from the MASTER node of
+  the cluster.
 
 USAGE:
 
