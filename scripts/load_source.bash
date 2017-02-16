@@ -5,11 +5,6 @@ set -e
 SCRIPT=`realpath $0`
 SCRIPTS=`dirname $SCRIPT`
 
-# Uncomment this to enable debug printout from the environment
-# setting seqeunce.
-#
-#VERBOSE=1
-
 source $SCRIPTS/env_qserv_stack.bash
 
 assert_worker
@@ -19,36 +14,42 @@ sql_dir=`realpath ${SCRIPTS}/../sql`
 
 worker=`/usr/bin/hostname`
 
-echo "------------------------------------------------------------------------------------"
-echo "["`date`"] ** Processing configuration templates at worker: ${worker} **"
-echo "------------------------------------------------------------------------------------"
+verbose "------------------------------------------------------------------------------------"
+verbose "["`date`"] ** Processing configuration templates at worker: ${worker} **"
+verbose "------------------------------------------------------------------------------------"
 
 for file in common.cfg; do
-    echo "${config_dir}/${file}.tmpl -> ${TMP_DIR}/${file}"
+    verbose "${config_dir}/${file}.tmpl -> ${TMP_DIR}/${file}"
     translate_template ${config_dir}/${file}.tmpl ${TMP_DIR}/${file}
 done
 
 loader=`which qserv-data-loader.py`
-opt_verbose="--verbose --verbose --verbose --verbose-all"
+if [ ! -z "$VERBOSE" ]; then
+    opt_verbose="--verbose --verbose --verbose --verbose-all"
+else
+    opt_verbose=""
+fi
 opt_conn="--host=${MASTER} --port=5012 --secret=${config_dir}/wmgr.secret --no-css"
 opt_config="--config=${TMP_DIR}/common.cfg --config=${config_dir}/${OUTPUT_SOURCE_TABLE}.cfg"
 opt_db_table_schema="${OUTPUT_DB} ${OUTPUT_SOURCE_TABLE} ${sql_dir}/${OUTPUT_SOURCE_TABLE}.sql"
 worker_data_dir="${QSERV_DATA_DIR}/${OUTPUT_SOURCE_TABLE}/${worker}"
 
-echo "------------------------------------------------------------------------------------"
-echo "["`date`"] ** Begin loading at worker: ${worker} **"
-echo "------------------------------------------------------------------------------------"
+verbose "------------------------------------------------------------------------------------"
+verbose "["`date`"] ** Begin loading at worker: ${worker} **"
+verbose "------------------------------------------------------------------------------------"
 
 for folder in `ls ${worker_data_dir}`; do
 
-    echo "["`date`"] ** Loading folder: ${folder} **"
-    echo "------------------------------------------------------------------------------------"
+    verbose "["`date`"] ** Loading folder: ${folder} **"
+    verbose "------------------------------------------------------------------------------------"
 
     opt_data="--skip-partition --chunks-dir=${worker_data_dir}/${folder}/"
     loadercmd="${loader} ${opt_verbose} ${opt_conn} --worker=${worker} ${opt_config} ${opt_data} ${opt_db_table_schema}"
 
-    echo ${loadercmd}
-    #${loadercmd}
-    echo "------------------------------------------------------------------------------------"
+    verbose ${loadercmd}
+    if [ -z "$(test_flag '--dry-run|-n')" ]; then
+        ${loadercmd}
+    fi
+    verbose "------------------------------------------------------------------------------------"
 done
-echo "["`date`"] ** Finished loading **"
+verbose "["`date`"] ** Finished loading **"

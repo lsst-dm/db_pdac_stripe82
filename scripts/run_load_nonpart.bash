@@ -7,7 +7,9 @@ SCRIPTS=`dirname $SCRIPT`
 
 source $SCRIPTS/env.bash
 
+assert_master
+
 for node in $SSH_WORKERS; do
-    echo $node : loading non-partitionable tables $OUTPUT_NONPART_TABLES into $OUTPUT_DB
-    ssh -n $node "$SCRIPTS/load_nonpart.bash" >& $LOG_DIR/${node}_load_nonpart.log&
+    verbose $node : loading non-partitionable tables $OUTPUT_NONPART_TABLES into $OUTPUT_DB
+    ssh -n $node "$SCRIPTS/load_nonpart.bash '$@'" >& $LOG_DIR/${node}_load_nonpart.log&
 done

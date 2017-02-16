@@ -60,6 +60,24 @@ function assert_master_or_worker {
     fi
 }
 
+# Extract common command line parameters (if any) and set the corresponding
+# environment variables.
+
+function parse_options {
+    if [ $# -gt 0 ]; then
+        for opt in $@; do
+            case $opt in
+                -v|--verbose)
+                    VERBOSE=1
+                    ;;
+                -d|--debug)
+                    DEBUG=1
+                    ;;
+            esac
+        done
+    fi
+}
+
 # Translate the specified template file and print the result
 # into the specified file.
 #
@@ -104,15 +122,53 @@ function translate_template {
     fi
 }
 
-# This function is similar to 'echo' except it will print
-# an input message (all parameters) if the environment variable VERBOSE
-# is present.
+# These functions are similar to 'echo' except they will print
+# an input message (all parameters)only when the corresponding
+# environment variable VERBOSE or DEBUG are present
 
-function debug {
+function verbose {
     if [ ! -z ${VERBOSE} ]; then
         echo "$@"
     fi
 }
+
+function debug {
+    if [ ! -z ${DEBUG} ]; then
+        echo "$@"
+    fi
+}
+
+# Check if the specified flag is presentamong command line
+# parameters.
+#
+# NOTE: The implementation of the function depends on the content
+#       of variable _OPTIONS which is
+
+_OPTIONS="$@"
+
+function test_flag {
+    if [ -z "$1" ]; then
+        echo "env.bash: usage: test_flag <flag>"
+        exit 1
+    fi
+    result=''
+    for opt in $_OPTIONS; do
+        if [[ "$1" == *"$opt"* ]]; then
+            result=1
+        fi
+    done
+    echo $result
+}
+
+# Extract common command line parameters (if any) and set
+# the corresponding environment variables.
+
+if [ ! -z "$(test_flag '-v|--verbose')" ]; then
+    VERBOSE=1
+fi
+if [ ! -z "$(test_flag '-d|--debug')" ]; then
+     DEBUG=1
+fi
 
 # Verify if all folders exists for the current node on which
 # the script is being run. Try creating the missing folders.
@@ -122,24 +178,24 @@ if [[ "$MASTER $WORKERS" == *"$(hostname)"* ]]; then
     # Make sure the script is being run under user 'qserv'
 
     if [ "$(whoami)" != "qserv" ]; then
-        echo "env.bash: this script must be run by user 'qserv'"
+        echo "error: this script must be run by user 'qserv'"
         exit 1
     fi
-    debug "env.bash: user 'qserv'"
+    debug "debug: user 'qserv'"
 
     # Read-only access to these folders should be good enough
 
     for folder in "$QSERV_DATA_DIR" "$QSERV_MYSQL_DIR"; do
 
         if [ ! -d "$folder" ]; then
-            echo "env.bash: directory '${folder}' doesn't exist or is not accessible"
+            echo "error: directory '${folder}' doesn't exist or is not accessible"
             exit 1
         fi
         if [ ! -r "$folder" ]; then
-            echo "env.bash: directory '${folder}' is not readable"
+            echo "error: directory '${folder}' is not readable"
             exit 1
         fi
-        debug "env.bash: access verified for '${folder}'"
+        debug "debug: access verified for '${folder}'"
     done
 
     # Check if a folder where MySQL file dumps and load would go
@@ -151,13 +207,13 @@ if [[ "$MASTER $WORKERS" == *"$(hostname)"* ]]; then
         mkdir -p      ${QSERV_DUMPS_DIR}
         chmod -R 0777 ${QSERV_DUMPS_DIR}
 
-        debug "env.sh: created directory '${QSERV_DUMPS_DIR}'"
+        debug "debug: created directory '${QSERV_DUMPS_DIR}'"
     fi
     if [ ! -w "$QSERV_DUMPS_DIR" ]; then
-        echo "env.bash: directory '${QSERV_DUMPS_DIR}' is not writeable"
+        echo "error: directory '${QSERV_DUMPS_DIR}' is not writeable"
         exit 1
     fi
-    debug "env.bash: access verified for '${QSERV_DUMPS_DIR}'"
+    debug "debug: access verified for '${QSERV_DUMPS_DIR}'"
 
     # Verify and create (if needed) if the temporary and log folders
     # exists and can be accessed for writing purposes by the current user.
@@ -166,13 +222,13 @@ if [[ "$MASTER $WORKERS" == *"$(hostname)"* ]]; then
         if [ ! -d "$folder" ]; then
             mkdir -p      "$folder"
             chmod -R 0777 "$folder"
-            debug "env.sh: created directory '${folder}'"
+            debug "debug: created directory '${folder}'"
         fi
         if [ ! -w "$folder" ]; then
-            echo "env.bash: directory '${folder}' is not writeable"
+            echo "error: directory '${folder}' is not writeable"
             exit 1
         fi
-        debug "env.bash: access verified for '${folder}'"
+        debug "debug: access verified for '${folder}'"
     done
 fi
 

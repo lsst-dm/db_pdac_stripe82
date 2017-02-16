@@ -19,16 +19,16 @@ worker="$(hostname)"
 
 triplet_file="${QSERV_DUMPS_DIR}/idx_object_${chunk}.tsv"
 
-echo "------------------------------------------------------------------------------------------------"
-echo "["`date`"] ** Begin dumping triplets of chunk ${chunk} at worker: ${worker} **"
-echo "------------------------------------------------------------------------------------------------"
-echo "output file:    ${triplet_file}"
+verbose "------------------------------------------------------------------------------------------------"
+verbose "["`date`"] ** Begin dumping triplets of chunk ${chunk} at worker: ${worker} **"
+verbose "------------------------------------------------------------------------------------------------"
+verbose "output file:    ${triplet_file}"
 
 rm -f ${triplet_file}
 
 ${mysql_cmd} -e "SELECT id,chunkId,subChunkId FROM ${OUTPUT_DB}.${OUTPUT_OBJECT_TABLE}_${chunk} INTO OUTFILE '${triplet_file}'"
 
-echo "total triplets: "`wc -l ${triplet_file} | awk '{print $1}'`
-echo "------------------------------------------------------------------------------------------------"
-echo "["`date`"] ** Finished dumping triplets of chunk ${chunk} at worker: ${worker} **"
-echo "------------------------------------------------------------------------------------------------"
+verbose "total triplets: "`wc -l ${triplet_file} | awk '{print $1}'`
+verbose "------------------------------------------------------------------------------------------------"
+verbose "["`date`"] ** Finished dumping triplets of chunk ${chunk} at worker: ${worker} **"
+verbose "------------------------------------------------------------------------------------------------"

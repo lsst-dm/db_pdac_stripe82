@@ -13,7 +13,7 @@ assert_worker
 
 for chunk in `cat ${TMP_DIR}/chunks/${chunks}`;
 do
-    echo "Dumping triplets of chunk: ${chunk}"
-    ${SCRIPTS}/dump_triplet_chunk.bash ${chunk} >& ${LOG_DIR}/dump_triplet.${chunk}.log
+    verbose "Dumping triplets of chunk: ${chunk}"
+    ${SCRIPTS}/dump_triplet_chunk.bash ${chunk} "$@" >& ${LOG_DIR}/dump_triplet.${chunk}.log
 done
 
