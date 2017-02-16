@@ -37,7 +37,7 @@ verbose "-----------------------------------------------------------------------
 verbose "["`date`"] ** Begin loading at worker: ${worker} **"
 verbose "------------------------------------------------------------------------------------"
 
-opt_data="--skip-partition --chunks-dir=${QSERV_DATA_DIR}/${OUTPUT_OBJECT_TABLE}/${worker}/"
+opt_data="--index-db= --skip-partition --chunks-dir=${QSERV_DATA_DIR}/${OUTPUT_OBJECT_TABLE}/${worker}/"
 loadercmd="${loader} ${opt_verbose} ${opt_conn} --worker=${worker} ${opt_config} ${opt_data} ${opt_db_table_schema}"
 
 verbose ${loadercmd}
