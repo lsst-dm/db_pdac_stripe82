@@ -47,7 +47,7 @@ for folder in `ls ${worker_data_dir}`; do
     loadercmd="${loader} ${opt_verbose} ${opt_conn} --worker=${worker} ${opt_config} ${opt_data} ${opt_db_table_schema}"
 
     verbose ${loadercmd}
-    if [ -z "$(test_flag '--dry-run|-n')" ]; then
+    if [ -z "$(test_flag '-n|--dry-run')" ]; then
         ${loadercmd}
     fi
     verbose "------------------------------------------------------------------------------------"

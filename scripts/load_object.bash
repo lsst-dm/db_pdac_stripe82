@@ -41,7 +41,7 @@ opt_data="--index-db= --skip-partition --chunks-dir=${QSERV_DATA_DIR}/${OUTPUT_O
 loadercmd="${loader} ${opt_verbose} ${opt_conn} --worker=${worker} ${opt_config} ${opt_data} ${opt_db_table_schema}"
 
 verbose ${loadercmd}
-if [ -z "$(test_flag '--dry-run|-n')" ]; then
+if [ -z "$(test_flag '-n|--dry-run')" ]; then
     ${loadercmd}
 fi
 verbose "------------------------------------------------------------------------------------"

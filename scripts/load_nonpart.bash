@@ -46,7 +46,7 @@ for table in ${OUTPUT_NONPART_TABLES}; do
     loadercmd="${loader} ${opt_verbose} ${opt_conn} --worker=${worker} ${opt_config} ${OUTPUT_DB} ${table} ${opt_schema} ${opt_data}"
 
     verbose ${loadercmd}
-    if [ -z "$(test_flag '--dry-run|-n')" ]; then
+    if [ -z "$(test_flag '-n|--dry-run')" ]; then
         ${loadercmd}
     fi
     verbose "------------------------------------------------------------------------------------"
