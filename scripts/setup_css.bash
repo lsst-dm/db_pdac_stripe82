@@ -20,7 +20,7 @@ css_${OUTPUT_SOURCE_TABLE}.params \
 
 for f in $files; do
     f_tmpl=${config_dir}/${f}.tmpl
-    translate_template $f_tmpl $TMP_DIR/$f
+    translate_template $f_tmpl $LOCAL_TMP_DIR/$f
 done
 
 # Populate CSS for the new database if the database
@@ -33,6 +33,6 @@ for db in `qserv-admin.py "SHOW DATABASES;"`; do
 done
 
 qserv-admin.py "CREATE DATABASE ${OUTPUT_DB} ${config_dir}/css.params;"
-qserv-admin.py "CREATE TABLE ${OUTPUT_DB}.${OUTPUT_OBJECT_TABLE} ${TMP_DIR}/css_${OUTPUT_OBJECT_TABLE}.params;"
-qserv-admin.py "CREATE TABLE ${OUTPUT_DB}.${OUTPUT_SOURCE_TABLE} ${TMP_DIR}/css_${OUTPUT_SOURCE_TABLE}.params;"
+qserv-admin.py "CREATE TABLE ${OUTPUT_DB}.${OUTPUT_OBJECT_TABLE} ${LOCAL_TMP_DIR}/css_${OUTPUT_OBJECT_TABLE}.params;"
+qserv-admin.py "CREATE TABLE ${OUTPUT_DB}.${OUTPUT_SOURCE_TABLE} ${LOCAL_TMP_DIR}/css_${OUTPUT_SOURCE_TABLE}.params;"
 

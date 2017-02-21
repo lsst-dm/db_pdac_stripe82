@@ -1,5 +1,7 @@
 #! /bin/bash
 
+set -x
+
 # Custom versions of the LSST Stack and the latest version of the Qserv
 # management scripts.
 
@@ -31,8 +33,8 @@ QSERV_DUMPS_DIR="/qserv/data/dumps/$OUTPUT_DB"
 
 # The default location for the log files created on Qserv node
 
-TMP_DIR="/tmp/$OUTPUT_DB"
-LOG_DIR="$TMP_DIR/log"
+LOCAL_TMP_DIR="/tmp/$OUTPUT_DB"
+LOCAL_LOG_DIR="$LOCAL_TMP_DIR/log"
 
 # Shortcuts
 
@@ -237,7 +239,7 @@ if [[ "$MASTER $WORKERS" == *"$(hostname)"* ]]; then
     # Verify and create (if needed) if the temporary and log folders
     # exists and can be accessed for writing purposes by the current user.
 
-    for folder in "$TMP_DIR" "$LOG_DIR"; do
+    for folder in "$LOCAL_TMP_DIR" "$LOCAL_LOG_DIR"; do
         if [ ! -d "$folder" ]; then
             mkdir -p      "$folder"
             chmod -R 0777 "$folder"

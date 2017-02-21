@@ -36,5 +36,5 @@ assert_master
 
 for node in $SSH_MASTER $SSH_WORKERS; do
     verbose $node : creating database $OUTPUT_DB
-    ssh -n $node "$SCRIPTS/create_database.bash '$@'" >& $LOG_DIR/${node}_create_database.log &
+    ssh -n $node "$SCRIPTS/create_database.bash '$@'" >& $LOCAL_LOG_DIR/${node}_create_database.log &
 done

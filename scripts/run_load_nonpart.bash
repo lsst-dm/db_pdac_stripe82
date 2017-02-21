@@ -11,5 +11,5 @@ assert_master
 
 for node in $SSH_WORKERS; do
     verbose $node : loading non-partitionable tables $OUTPUT_NONPART_TABLES into $OUTPUT_DB
-    ssh -n $node "$SCRIPTS/load_nonpart.bash '$@'" >& $LOG_DIR/${node}_load_nonpart.log&
+    ssh -n $node "$SCRIPTS/load_nonpart.bash '$@'" >& $LOCAL_LOG_DIR/${node}_load_nonpart.log&
 done

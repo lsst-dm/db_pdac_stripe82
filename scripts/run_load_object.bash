@@ -11,5 +11,5 @@ assert_master
 
 for node in $SSH_WORKERS; do
     verbose $node : loading object table $OUTPUT_OBJECT_TABLE into $OUTPUT_DB
-    ssh -n $node "$SCRIPTS/load_object.bash '$@'" >& $LOG_DIR/${node}_load_object.log&
+    ssh -n $node "$SCRIPTS/load_object.bash '$@'" >& $LOCAL_LOG_DIR/${node}_load_object.log&
 done

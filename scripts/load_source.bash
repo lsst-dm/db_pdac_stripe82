@@ -19,8 +19,8 @@ verbose "["`date`"] ** Processing configuration templates at worker: ${worker} *
 verbose "------------------------------------------------------------------------------------"
 
 for file in common.cfg; do
-    verbose "${config_dir}/${file}.tmpl -> ${TMP_DIR}/${file}"
-    translate_template ${config_dir}/${file}.tmpl ${TMP_DIR}/${file}
+    verbose "${config_dir}/${file}.tmpl -> ${LOCAL_TMP_DIR}/${file}"
+    translate_template ${config_dir}/${file}.tmpl ${LOCAL_TMP_DIR}/${file}
 done
 
 loader=`which qserv-data-loader.py`
@@ -30,7 +30,7 @@ else
     opt_verbose=""
 fi
 opt_conn="--host=${MASTER} --port=5012 --secret=${config_dir}/wmgr.secret --no-css"
-opt_config="--config=${TMP_DIR}/common.cfg --config=${config_dir}/${OUTPUT_SOURCE_TABLE}.cfg"
+opt_config="--config=${LOCAL_TMP_DIR}/common.cfg --config=${config_dir}/${OUTPUT_SOURCE_TABLE}.cfg"
 opt_db_table_schema="${OUTPUT_DB} ${OUTPUT_SOURCE_TABLE} ${sql_dir}/${OUTPUT_SOURCE_TABLE}.sql"
 worker_data_dir="${QSERV_DATA_DIR}/${OUTPUT_SOURCE_TABLE}/${worker}"
 

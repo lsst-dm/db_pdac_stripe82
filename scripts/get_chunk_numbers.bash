@@ -15,15 +15,15 @@ source $SCRIPTS/env_base_stack.bash
 
 assert_worker
 
-cd $TMP_DIR
+cd $LOCAL_TMP_DIR
 
 verbose "fetching chunk numbers from database ${OUTPUT_DB}"
 
 echo "\
-SELECT SUBSTR(TABLE_NAME,8) \
+SELECT SUBSTR(TABLE_NAME,LENGTH('${OUTPUT_OBJECT_TABLE}')+2) \
   FROM information_schema.tables \
   WHERE TABLE_SCHEMA='${OUTPUT_DB}' \
-  AND TABLE_NAME LIKE 'Object\_%' AND TABLE_ROWS > 0;" | $mysql_cmd | sort -n > chunks.txt
+  AND TABLE_NAME LIKE '${OUTPUT_OBJECT_TABLE}\_%' AND TABLE_ROWS > 0;" | $mysql_cmd | sort -n > chunks.txt
 
 verbose "total of `wc -l  chunks.txt` chunks found"
 verbose "splitting chunk number series into multiple subsequences"

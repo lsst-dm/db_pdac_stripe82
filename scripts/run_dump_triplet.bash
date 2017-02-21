@@ -11,5 +11,5 @@ assert_master
 
 for node in $SSH_WORKERS; do
     verbose $node : dumping triplets from object chunks of $OUTPUT_DB
-    ssh -n $node "$SCRIPTS/dump_triplet.bash '$@'" >& $LOG_DIR/${node}_dump_triplet.log &
+    ssh -n $node "$SCRIPTS/dump_triplet.bash '$@'" >& $LOCAL_LOG_DIR/${node}_dump_triplet.log &
 done

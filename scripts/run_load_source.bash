@@ -11,5 +11,5 @@ assert_master
 
 for node in $SSH_WORKERS; do
     verbose $node : loading source table $OUTPUT_SOURCE_TABLE into $OUTPUT_DB
-    ssh -n $node "$SCRIPTS/load_source.bash '$@'" >& $LOG_DIR/${node}_load_source.log&
+    ssh -n $node "$SCRIPTS/load_source.bash '$@'" >& $LOCAL_LOG_DIR/${node}_load_source.log&
 done

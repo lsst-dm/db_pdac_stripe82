@@ -26,14 +26,14 @@ verbose ""
 for f in $files; do
     f_tmpl=${config_dir}/${f}.tmpl
     verbose "  $f_tmpl"
-    translate_template $f_tmpl $TMP_DIR/$f
+    translate_template $f_tmpl $LOCAL_TMP_DIR/$f
 done
 
 verbose ""
 verbose "Output:"
 verbose ""
 for f in $files; do
-    f_out=$TMP_DIR/$f
+    f_out=$LOCAL_TMP_DIR/$f
     verbose "  $f_out"
 done
 verbose ""

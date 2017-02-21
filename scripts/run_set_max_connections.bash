@@ -26,5 +26,5 @@ assert_master
 
 for node in $SSH_MASTER $SSH_WORKERS; do
     verbose "Configuring connections on: $node"
-    ssh -n $node "$SCRIPTS/set_max_connections.bash '$@'" >& $LOG_DIR/${node}_set_max_connections.log&
+    ssh -n $node "$SCRIPTS/set_max_connections.bash '$@'" >& $LOCAL_LOG_DIR/${node}_set_max_connections.log&
 done
