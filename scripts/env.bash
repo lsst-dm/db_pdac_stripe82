@@ -1,6 +1,18 @@
 #! /bin/bash
+#
+# ATTENTION: this script is always 'sourced', and it requires that
+#            the environment variable 'SCRIPTS' pointing to a location
+#            of this and other scripts was set up prior to source
+#            this one.
 
-set -x
+if [ -z "${SCRIPTS}" ]; then
+    echo "env.bash: environment variable SCRIPTS is not set"
+    exit 1
+fi
+
+# Dataset specifications are found in a separate file
+
+source $SCRIPTS/dataset.bash
 
 # Custom versions of the LSST Stack and the latest version of the Qserv
 # management scripts.
@@ -18,16 +30,6 @@ SSH_MASTER="qserv-master01"
 WORKERS=`seq --format 'lsst-qserv-db%02.0f' 1 30`
 SSH_WORKERS=`seq --format 'qserv-db%02.0f' 1 30`
 
-# Source and destination databases
-
-INPUT_DB="sdss_stripe82_00"
-
-OUTPUT_DB="sdss_stripe82_01"
-OUTPUT_OBJECT_TABLE="RunDeepSource"
-OUTPUT_SOURCE_TABLE="RunDeepForcedSource"
-OUTPUT_NONPART_TABLES="ZZZ_Db_Description LeapSeconds Filter Science_Ccd_Exposure Science_Ccd_Exposure_Metadata Science_Ccd_Exposure_To_Htm10 DeepCoadd DeepCoadd_Metadata DeepCoadd_To_Htm10 Science_Ccd_Exposure_NoFile"
-
-QSERV_DATA_DIR="/datasets/gapon/production/stripe82_catalog_load/production_load"
 QSERV_MYSQL_DIR="/qserv/data/mysql"
 QSERV_DUMPS_DIR="/qserv/data/dumps/$OUTPUT_DB"
 
@@ -206,7 +208,7 @@ if [[ "$MASTER $WORKERS" == *"$(hostname)"* ]]; then
 
     # Read-only access to these folders should be good enough
 
-    for folder in "$QSERV_DATA_DIR" "$QSERV_MYSQL_DIR"; do
+    for folder in "$INPUT_DATA_DIR" "$QSERV_MYSQL_DIR"; do
 
         if [ ! -d "$folder" ]; then
             echo "error: directory '${folder}' doesn't exist or is not accessible"

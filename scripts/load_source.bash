@@ -32,7 +32,7 @@ fi
 opt_conn="--host=${MASTER} --port=5012 --secret=${config_dir}/wmgr.secret --no-css"
 opt_config="--config=${LOCAL_TMP_DIR}/common.cfg --config=${config_dir}/${OUTPUT_SOURCE_TABLE}.cfg"
 opt_db_table_schema="${OUTPUT_DB} ${OUTPUT_SOURCE_TABLE} ${sql_dir}/${OUTPUT_SOURCE_TABLE}.sql"
-worker_data_dir="${QSERV_DATA_DIR}/${OUTPUT_SOURCE_TABLE}/${worker}"
+worker_data_dir="${INPUT_DATA_DIR}/${OUTPUT_SOURCE_TABLE}/${worker}"
 
 verbose "------------------------------------------------------------------------------------"
 verbose "["`date`"] ** Begin loading at worker: ${worker} **"

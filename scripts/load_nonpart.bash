@@ -42,7 +42,7 @@ for table in ${OUTPUT_NONPART_TABLES}; do
     verbose "------------------------------------------------------------------------------------"
 
     opt_schema="${sql_dir}/${table}.sql"
-    opt_data="${QSERV_DATA_DIR}/non-part/${table}.txt"
+    opt_data="${INPUT_DATA_DIR}/non-part/${table}.txt"
     loadercmd="${loader} ${opt_verbose} ${opt_conn} --worker=${worker} ${opt_config} ${OUTPUT_DB} ${table} ${opt_schema} ${opt_data}"
 
     verbose ${loadercmd}
