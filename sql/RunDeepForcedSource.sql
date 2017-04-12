@@ -16,48 +16,172 @@ CREATE TABLE `RunDeepForcedSource` (
         -- <descr>goodSeeingSourceId of parent if source is deblended, otherwise NULL.</descr>
         -- <ucd>meta.id.parent;src</ucd>
   `flags_badcentroid` bit(1) NOT NULL,
+        -- <descr>Set if the centroid measurement failed.</descr>
+        -- <ucd>meta.code.error</ucd>
   `centroid_sdss_x` double DEFAULT NULL,
+        -- <descr>Pixel axis 1 coordinate of forced-source SDSS entroid,
+        -- LSST pixel coordinate conventions.</descr>
+        -- <ucd>pos.cartesian.x</ucd>
+        -- <unit>pixel</unit>
   `centroid_sdss_y` double DEFAULT NULL,
+        -- <descr>Pixel axis 2 coordinate of forced-source SDSS centroid,
+        -- LSST pixel coordinate conventions.</descr>
+        -- <ucd>pos.cartesian.y</ucd>
+        -- <unit>pixel</unit>
   `centroid_sdss_xVar` float DEFAULT NULL,
+        -- <descr>Variance of x. of forced-source SDSS centroid</descr>
+        -- <ucd>stat.variance;pos.cartesian.x</ucd>
+        -- <unit>pixel^2</unit>
   `centroid_sdss_xyCov` float DEFAULT NULL,
+        -- <descr>Covariance of x and y of forced-source SDSS centroid</descr>
+        -- <ucd>stat.covariance</ucd>
+        -- <unit>pixel^2</unit>
   `centroid_sdss_yVar` float DEFAULT NULL,
+        -- <descr>Variance of y. forced-source SDSS centroid</descr>
+        -- <ucd>stat.variance;pos.cartesian.y</ucd>
+        -- <unit>pixel^2</unit>
   `centroid_sdss_flags` bit(1) NOT NULL,
+        -- <descr>set if SDSS centroid is unreliable</descr>
+        -- <ucd>meta.code.error</ucd>
   `centroid_gaussian_x` double DEFAULT NULL,
+        -- <descr>Pixel axis 1 coordinate of forced-source gaussian centroid,
+        -- LSST pixel coordinate conventions.</descr>
+        -- <ucd>pos.cartesian.x</ucd>
+        -- <unit>pixel</unit>
   `centroid_gaussian_y` double DEFAULT NULL,
+        -- <descr>Pixel axis 2 coordinate of forced-source gaussian centroid,
+        -- LSST pixel coordinate conventions.</descr>
+        -- <ucd>pos.cartesian.y</ucd>
+        -- <unit>pixel</unit>
   `centroid_gaussian_xVar` float DEFAULT NULL,
+        -- <descr>Variance of x. of forced-source gaussian centroid</descr>
+        -- <ucd>stat.variance;pos.cartesian.x</ucd>
+        -- <unit>pixel^2</unit>
   `centroid_gaussian_xyCov` float DEFAULT NULL,
+        -- <descr>Covariance of x and y of forced-source gaussian centroid</descr>
+        -- <ucd>stat.covariance</ucd>
+        -- <unit>pixel^2</unit>
   `centroid_gaussian_yVar` float DEFAULT NULL,
+        -- <descr>Variance of y. forced-source gaussian centroid</descr>
+        -- <ucd>stat.variance;pos.cartesian.y</ucd>
+        -- <unit>pixel^2</unit>
   `centroid_gaussian_flags` bit(1) NOT NULL,
+        -- <descr>set if gaussian centroid is unreliable</descr>
+        -- <ucd>meta.code.error</ucd>
   `centroid_naive_x` double DEFAULT NULL,
+        -- <descr>Pixel axis 1 coordinate of forced-source naive centroid,
+        -- LSST pixel coordinate conventions.</descr>
+        -- <ucd>pos.cartesian.x</ucd>
+        -- <unit>pixel</unit>
   `centroid_naive_y` double DEFAULT NULL,
+        -- <descr>Pixel axis 2 coordinate of forced-source naive centroid,
+        -- LSST pixel coordinate conventions.</descr>
+        -- <ucd>pos.cartesian.y</ucd>
+        -- <unit>pixel</unit>
   `centroid_naive_xVar` float DEFAULT NULL,
+        -- <descr>Variance of x. of forced-source naive centroid</descr>
+        -- <ucd>stat.variance;pos.cartesian.x</ucd>
+        -- <unit>pixel^2</unit>
   `centroid_naive_xyCov` float DEFAULT NULL,
+        -- <descr>Covariance of x and y of forced-source naive centroid</descr>
+        -- <ucd>stat.covariance</ucd>
+        -- <unit>pixel^2</unit>
   `centroid_naive_yVar` float DEFAULT NULL,
+        -- <descr>Variance of y. forced-source naive centroid</descr>
+        -- <ucd>stat.variance;pos.cartesian.y</ucd>
+        -- <unit>pixel^2</unit>
   `centroid_naive_flags` bit(1) NOT NULL,
+        -- <descr>set if naive centroid is unreliable</descr>
+        -- <ucd>meta.code.error</ucd>
   `flags_pixel_edge` bit(1) NOT NULL,
+        -- <descr>Set if forced-source is in region labeled EDGE.</descr>
+        -- <ucd>meta.code</ucd>
   `flags_pixel_interpolated_any` bit(1) NOT NULL,
+        -- <descr>Set if forced-source footprint includes
+        -- interpolated pixels.</descr>
+        -- <ucd>meta.code</ucd>
   `flags_pixel_interpolated_center` bit(1) NOT NULL,
+        -- <descr>Set if forced-source center is close to
+        -- interpolated pixels.</descr>
+        -- <ucd>meta.code</ucd>
   `flags_pixel_saturated_any` bit(1) NOT NULL,
+        -- <descr>Set if forced-source footprint includes
+        -- saturated pixels.</descr>
+        -- <ucd>meta.code</ucd>
   `flags_pixel_saturated_center` bit(1) NOT NULL,
+        -- <descr>Set if forced-source center is close to
+        -- saturated pixels.</descr>
+        -- <ucd>meta.code</ucd>
   `flags_pixel_cr_any` bit(1) NOT NULL,
+        -- <descr>Set if forced-source footprint includes cosmic ray pixels</descr>
+        -- <ucd>meta.code</ucd>
   `flags_pixel_cr_center` bit(1) NOT NULL,
+        -- <descr>Set if forced-source center is close to cosmic ray pixels</descr>
+        -- <ucd>meta.code</ucd>
   `flags_pixel_bad` bit(1) NOT NULL,
+        -- <descr>Set if forced-source footptinyt incoudes bad pixels </descr>
+        -- <ucd>meta.code</ucd>
   `shape_sdss_Ixx` double DEFAULT NULL,
+        -- <descr>Second moment.</descr>
+        -- <unit>pixel^2</unit>
   `shape_sdss_Iyy` double DEFAULT NULL,
+        -- <descr>Second moment.</descr>
+        -- <unit>pixel^2</unit>
   `shape_sdss_Ixy` double DEFAULT NULL,
+        -- <descr>Second moment.</descr>
+        -- <unit>pixel^2</unit>
   `shape_sdss_IxxVar` float DEFAULT NULL,
+        -- <descr>Variance of shapeIxx.</descr>
+        -- <ucd>stat.variance</ucd>
+        -- <unit>pixel^4</unit>
   `shape_sdss_IxxIyyCov` float DEFAULT NULL,
+        -- <descr>Covariance of shapeIxx and shapeIyy.</descr>
+        -- <ucd>stat.covariance</ucd>
+        -- <unit>pixel^4</unit>
   `shape_sdss_IxxIxyCov` float DEFAULT NULL,
+        -- <descr>Covariance of shapeIxx and shapeIxy.</descr>
+        -- <ucd>stat.covariance</ucd>
+        -- <unit>pixel^4</unit>
   `shape_sdss_IyyVar` float DEFAULT NULL,
+        -- <descr>Variance of shapeIyy.</descr>
+        -- <ucd>stat.variance</ucd>
+        -- <unit>pixel^4</unit>
   `shape_sdss_IyyIxyCov` float DEFAULT NULL,
+        -- <descr>Covariance of shapeIyy and shapeIxy.</descr>
+        -- <ucd>stat.covariance</ucd>
+        -- <unit>pixel^4</unit>
   `shape_sdss_IxyVar` float DEFAULT NULL,
+        -- <descr>Variance of shapeIyy.</descr>
+        -- <ucd>stat.variance</ucd>
+        -- <unit>pixel^4</unit>
   `shape_sdss_flags` bit(1) NOT NULL,
+        -- <descr>set if SDSS shape measurement is unreliable</descr>
+        -- <ucd>meta.code.error</ucd>
   `shape_sdss_centroid_x` double DEFAULT NULL,
+        -- <descr>Pixel axis 1 coordinate of forced-source shape centroid,
+        -- LSST pixel coordinate conventions.</descr>
+        -- <ucd>pos.cartesian.x</ucd>
+        -- <unit>pixel</unit>
   `shape_sdss_centroid_y` double DEFAULT NULL,
+        -- <descr>Pixel axis 2 coordinate of forced-source shape centroid,
+        -- LSST pixel coordinate conventions.</descr>
+        -- <ucd>pos.cartesian.y</ucd>
+        -- <unit>pixel</unit>
   `shape_sdss_centroid_xVar` float DEFAULT NULL,
+        -- <descr>Variance of x. of forced-source shape centroid</descr>
+        -- <ucd>stat.variance;pos.cartesian.x</ucd>
+        -- <unit>pixel^2</unit>
   `shape_sdss_centroid_xyCov` float DEFAULT NULL,
+        -- <descr>Covariance of x and y of forced-source shape centroid</descr>
+        -- <ucd>stat.covariance</ucd>
+        -- <unit>pixel^2</unit>
   `shape_sdss_centroid_yVar` float DEFAULT NULL,
+        -- <descr>Variance of y. forced-source naive centroid</descr>
+        -- <ucd>stat.variance;pos.cartesian.y</ucd>
+        -- <unit>pixel^2</unit>
   `shape_sdss_centroid_flags` bit(1) NOT NULL,
+        -- <descr>set if centroid measured by SDSS shape algorithm is unreliable</descr>
+        -- <ucd>meta.code.error</ucd>
   `shape_sdss_flags_unweightedbad` bit(1) NOT NULL,
   `shape_sdss_flags_unweighted` bit(1) NOT NULL,
   `shape_sdss_flags_shift` bit(1) NOT NULL,
