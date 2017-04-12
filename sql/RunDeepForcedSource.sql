@@ -1,9 +1,20 @@
 CREATE TABLE `RunDeepForcedSource` (
   `id` bigint(20) NOT NULL,
+        -- <ucd>meta.id;src</ucd>
   `coord_ra` double DEFAULT NULL,
+        -- <descr>ICRS RA of source centroid (x, y).</descr>
+        -- <ucd>pos.eq.ra</ucd>
+        -- <unit>deg</unit>
   `coord_decl` double DEFAULT NULL,
+        -- <descr>ICRS Dec of source centroid (x, y).</descr>
+        -- <ucd>pos.eq.dec</ucd>
+        -- <unit>deg</unit>
   `coord_htmId20` bigint(20) DEFAULT NULL,
+        -- <descr>Level 20 HTM ID of (ra, decl)</descr>
+        -- <ucd>pos.HTM</ucd>
   `parent` bigint(20) DEFAULT NULL,
+        -- <descr>goodSeeingSourceId of parent if source is deblended, otherwise NULL.</descr>
+        -- <ucd>meta.id.parent;src</ucd>
   `flags_badcentroid` bit(1) NOT NULL,
   `centroid_sdss_x` double DEFAULT NULL,
   `centroid_sdss_y` double DEFAULT NULL,
